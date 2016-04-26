@@ -361,10 +361,7 @@ exports.register = function(commander) {
 
         });
 
-        return Promise.all(promises).then(function (out) {
-          debugger;
-        });
-        
+        return Promise.all(promises);
       })
 
       // error handle
