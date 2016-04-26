@@ -18,6 +18,7 @@ var exists = fs.existsSync;
 var write = fs.writeFileSync;
 var Promise = require('bluebird');
 var semver = require('semver');
+var del = require('del');
 
 exports.register = function(commander) {
 
@@ -343,6 +344,27 @@ exports.register = function(commander) {
           var componentJson = path.join(settings.root, 'component.json');
           write(componentJson, JSON.stringify(config, null, 2));
         }
+
+        return installed;
+      })
+      .then(function (installed) {
+        var promises = [];
+        // 遍历本次所有安装的组件
+        installed.forEach(function (component) {
+          var componentDir = path.join(settings.componentsDir, component.name); // 某个组件目录
+
+          if(!component.config.exclude) return;
+
+          promises.push(del(component.config.exclude.map(function (excludePath) {
+            return path.join(componentDir, excludePath);
+          })));
+
+        });
+
+        return Promise.all(promises).then(function (out) {
+          debugger;
+        });
+        
       })
 
       // error handle

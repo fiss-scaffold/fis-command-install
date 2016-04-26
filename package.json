@@ -1,7 +1,7 @@
 {
-  "name": "fis-command-install",
-  "description": "fis install command.",
-  "version": "0.2.16",
+  "name": "fiss-command-install",
+  "description": "fiss install command.",
+  "version": "0.0.1",
   "author": "FIS Team <fis@baidu.com>",
   "homepage": "http://fis.baidu.com/",
   "keywords": [
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fis-dev/fis-command-install.git"
+    "url": "https://github.com/fiss-scaffold/fiss-command-install.git"
   },
   "engines": {
     "node": ">= 0.8.0"
@@ -20,8 +20,10 @@
   },
   "dependencies": {
     "bluebird": "^2.3.11",
+    "del": "^2.2.0",
     "findup": "^0.1.5",
     "fis-scaffold-kernel": "~0.1.0",
+    "glob": "^7.0.3",
     "progress": "^1.1.8",
     "request": "^2.48.0",
     "semver": "^4.1.0",
