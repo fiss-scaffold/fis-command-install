@@ -150,7 +150,8 @@ exports.register = function(commander) {
             []
             .push
               .apply(settings.components, ret.devDependencies || []);
-
+              
+            ret.dir && (settings.componentsDir = path.join(settings.root, ret.dir));
             ret.protocol && (settings.protocol = ret.protocol);
             ret.github && _.mixin(settings.github, ret.github);
             ret.gitlab && _.mixin(settings.gitlab, ret.gitlab);
