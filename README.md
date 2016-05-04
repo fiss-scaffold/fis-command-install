@@ -15,6 +15,7 @@
 ### 配置示例：
 组件目录：
 ```
+widgets-demo
 ├── README.md
 ├── component.json
 ├── index.js
@@ -36,7 +37,7 @@
 ```
 那么执行`fiss install`命令后，`src`目录和`README.md`文件不会被安装。
 ```
-.
+widgets-demo
 ├── component.json
 ├── index.js
 └── widgets
