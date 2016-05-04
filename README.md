@@ -27,7 +27,8 @@
 执行`fiss install`后组件会被安装到项目中的`dirname`目录。
 ### 目录排除
 添加了在`component.json`中配置`exclude`项排除文件和目录被安装的功能。`exclude`配置项的语法请参考[globs](https://github.com/isaacs/minimatch#usage)。
-+ 配置示例：  
++ 配置示例： 
+
 组件目录：
 ```
 widgets-demo
