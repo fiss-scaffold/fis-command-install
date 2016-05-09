@@ -11,6 +11,21 @@
       -r, --repos <url>  repository url
 
 ## fiss install在fis3 install基础上的改进
+
+### 无`component.json`安装组件
+可在项目目录中不存在`component.json`文件的情况下安装组件，默认会使用如下配置：
+```
+{
+  "protocol": "gitlab",
+  "gitlab": {
+    "author": "fecom-fe",
+    "domain": "http://gitlab.58corp.com/",
+    "token": "...................."
+  }
+};
+```
+执行`fiss install component`后组件会被默认安装到项目中的`components`目录
+
 ### 定制安装目录
 添加了在`component.json`中配置`dir`项来定制安装目录的功能。
 + 配置示例：
