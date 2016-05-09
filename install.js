@@ -142,11 +142,12 @@ exports.register = function(commander) {
       var exists = require('fs').existsSync;
       var componentJson = path.join(settings.root, 'component.json');
 
-      if(!components.length) {
-        throw new Error('No component was specified!');
-      }
-
       if (!exists(componentJson)) { // 如果不存在component.json，使用默认设置
+
+        if(!components.length) {
+          throw new Error('No component was specified!');
+        }
+
         logger.warn('Missing `component.json`, will use default settings');
         return new Promise(function (resolve, reject) {
           var ret = {};
@@ -162,7 +163,6 @@ exports.register = function(commander) {
         return config(componentJson)
 
         .then(function(ret) {
-          settings.config = ret;
 
           []
           .push
@@ -171,12 +171,13 @@ exports.register = function(commander) {
           []
           .push
             .apply(settings.components, ret.devDependencies || []);
-            
+
           ret.dir && (settings.componentsDir = path.join(settings.root, ret.dir));
-          ret.protocol && (settings.protocol = ret.protocol);
-          ret.github && _.mixin(settings.github, ret.github);
-          ret.gitlab && _.mixin(settings.gitlab, ret.gitlab);
-          ret.lights && _.mixin(settings.lights, ret.lights);
+          settings.protocol = (ret.protocol ? ret.protocol :  defaults.protocol);
+          _.mixin(settings.github, _.mixin(defaults.github, ret.github));
+          _.mixin(settings.gitlab, _.mixin(defaults.gitlab, ret.gitlab));
+          _.mixin(settings.lights, _.mixin(defaults.lights, ret.lights));
+
         });
       }
     })
