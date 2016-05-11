@@ -19,6 +19,7 @@ var write = fs.writeFileSync;
 var Promise = require('bluebird');
 var semver = require('semver');
 var del = require('del');
+var jsonfile = require('jsonfile');
 
 // 默认设置，如果没有component.json，则使用此默认设置
 var defaults = {
@@ -33,7 +34,6 @@ var defaults = {
 exports.register = function(commander) {
 
   commander
-  .option('--save', 'save component(s) dependencies into `component.json` file.')
   .option('-r, --root <path>', 'set project root')
   .option('-i, --ignore', 'ignore excluded path')
   .option('--verbose', 'enable verbose mode')
@@ -42,7 +42,6 @@ exports.register = function(commander) {
     var args = [].slice.call(arguments);
     var options = args.pop();
     var settings = {
-      save: !!options.save,
       ignore: !!options.ignore,
       root: options.root || '',
       downloadGitlabFromSvn: options.downloadGitlabFromSvn,
@@ -346,14 +345,15 @@ exports.register = function(commander) {
 
     // 保存 components.json
     .then(function(installed) {
-      // 如果指定了  --save， 则需要把数据写入到 components.josn 文件里面。
-      if (settings.save && args.length && installed && installed.length) {
+      // 把安装的组件和版本号写入component.json中
+      if (installed && installed.length) {
         var config = settings.config || {};
         var specified = strToRemote(args.concat(), false, settings);
 
         config.dependencies = config.dependencies || [];
 
         var oldList = strToRemote(config.dependencies, false, settings);
+
         specified.forEach(function(item) {
           var idx;
 
@@ -366,7 +366,14 @@ exports.register = function(commander) {
         });
 
         var componentJson = path.join(settings.root, 'component.json');
-        write(componentJson, JSON.stringify(config, null, 2));
+        // 将安装的组件名称以及版本号写入component.json
+        if(fs.existsSync(componentJson)) {
+          var json = jsonfile.readFileSync(componentJson);
+          json.dependencies || (json.dependencies = []);
+          json.dependencies = json.dependencies.concat(config.dependencies).sort();
+          jsonfile.writeFileSync(componentJson, json, { spaces: 2 });
+        }
+
       }
 
       return installed;
@@ -408,7 +415,6 @@ function strToRemote(components, ignoreInvalid, settings) {
   return components
 
     .map(function(component) {
-      debugger;
       var type = factory.detect(component);
 
       if (!type) {
@@ -421,7 +427,7 @@ function strToRemote(components, ignoreInvalid, settings) {
       });
     })
     .filter(function(item) {
-      return item != null;
+      return item !== null;
     });
 }
 
