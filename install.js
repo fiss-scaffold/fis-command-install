@@ -35,6 +35,7 @@ exports.register = function(commander) {
   commander
   .option('--save', 'save component(s) dependencies into `component.json` file.')
   .option('-r, --root <path>', 'set project root')
+  .option('-i, --ignore', 'ignore excluded path')
   .option('--verbose', 'enable verbose mode')
   .option('--download-gitlab-from-svn', 'you don\'t need this.')
   .action(function() {
@@ -42,6 +43,7 @@ exports.register = function(commander) {
     var options = args.pop();
     var settings = {
       save: !!options.save,
+      ignore: !!options.ignore,
       root: options.root || '',
       downloadGitlabFromSvn: options.downloadGitlabFromSvn,
       components: args.concat()
@@ -371,6 +373,8 @@ exports.register = function(commander) {
     })
     .then(function (installed) {
       var promises = [];
+      // 如果设置了-i选择，则不应用exclude配置项
+      if(settings.ignore) return;
       // 遍历本次所有安装的组件
       installed.forEach(function (component) {
         var componentDir = path.join(settings.componentsDir, component.name); // 某个组件目录
